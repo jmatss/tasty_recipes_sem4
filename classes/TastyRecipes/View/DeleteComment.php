@@ -8,14 +8,10 @@ use TastyRecipes\Controller\Controller;
 
 class DeleteComment extends AbstractRequestHandler {
     private $timestamp;
-    private $username;
     private $recipeNumber;
     
     public function setTimestamp($timestamp) {
         $this->timestamp = $timestamp;
-    }
-    public function setUsername($username) {
-        $this->username = $username;
     }
     public function setReturnRecipeNumber($recipeNumber) {
         $this->recipeNumber = $recipeNumber;
@@ -29,8 +25,11 @@ class DeleteComment extends AbstractRequestHandler {
             $contr = new Controller();
             $this->session->set(Constants::CONTR_NAME, $contr);
         }
-        
-        $contr->deleteComment($this->timestamp, $this->username);
+        if($contr->checkIfLoggedIn())
+        {
+            $username = $contr->getLoggedInUsername();
+            $contr->deleteComment($this->timestamp, $username);
+        }
         
         \Header('Location: Recipe?recipe=' . $this->recipeNumber);
     }

@@ -11,7 +11,6 @@
                     echo '
                         <form action="DeleteComment" method="post" id="deleteform">
                             <input type="hidden" name="timestamp" value="' . $comment->getTimestamp() . '">
-                            <input type="hidden" name="username" value="' . $comment->getUsername() . '">
                             <input type="hidden" name="returnRecipeNumber" value="' . $comment->getRecipe() . '">
                             <input type="submit" value="Delete">
                         </form>
