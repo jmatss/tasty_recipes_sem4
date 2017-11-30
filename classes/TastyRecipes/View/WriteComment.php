@@ -4,6 +4,7 @@ namespace TastyRecipes\View;
 
 use Id1354fw\View\AbstractRequestHandler;
 use TastyRecipes\Util\Constants;
+use TastyRecipes\Controller\Controller;
 
 class WriteComment extends AbstractRequestHandler {
     private $recipeNumber;
@@ -21,7 +22,14 @@ class WriteComment extends AbstractRequestHandler {
     }
 
     protected function doExecute(): string {
-        $contr = $this->session->get(Constants::CONTR_NAME);
+        try {
+            $contr = $this->session->get(Constants::CONTR_NAME);
+        } catch(\LogicException $e) {
+            $this->session->restart();
+            $contr = new Controller();
+            $this->session->set(Constants::CONTR_NAME, $contr);
+        }
+        
         if (!($contr->writeComment($this->recipeNumber, $this->username, $this->comment))) {    // something wrong
             \Header('Location: Recipe?recipe=' . $this->recipeNumber . '&error=true');
         } else {

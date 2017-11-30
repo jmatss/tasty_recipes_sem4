@@ -1,14 +1,20 @@
 <?php
-
 namespace TastyRecipes\View;
 
 use Id1354fw\View\AbstractRequestHandler;
 use TastyRecipes\Util\Constants;
+use TastyRecipes\Controller\Controller;
 
 class FirstPage extends AbstractRequestHandler {
     
     protected function doExecute(): string {
-        $contr = $this->session->get(Constants::CONTR_NAME);
+        try {
+            $contr = $this->session->get(Constants::CONTR_NAME);
+        } catch(\LogicException $e) {
+            $this->session->restart();
+            $contr = new Controller();
+            $this->session->set(Constants::CONTR_NAME, $contr);
+        }
         
         if($contr->checkIfLoggedIn()) {
             $this->addVariable(Constants::USERNAME, $contr->getLoggedInUsername());
@@ -16,4 +22,3 @@ class FirstPage extends AbstractRequestHandler {
         return 'index';
     }
 }
-

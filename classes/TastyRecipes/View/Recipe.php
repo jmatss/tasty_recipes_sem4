@@ -4,6 +4,7 @@ namespace TastyRecipes\View;
 
 use Id1354fw\View\AbstractRequestHandler;
 use TastyRecipes\Util\Constants;
+use TastyRecipes\Controller\Controller;
 
 class Recipe extends AbstractRequestHandler{
     private $recipeNumber;
@@ -18,7 +19,14 @@ class Recipe extends AbstractRequestHandler{
     }
     
     protected function doExecute(): string {
-        $contr = $this->session->get(Constants::CONTR_NAME);
+        try {
+            $contr = $this->session->get(Constants::CONTR_NAME);
+        } catch(\LogicException $e) {
+            $this->session->restart();
+            $contr = new Controller();
+            $this->session->set(Constants::CONTR_NAME, $contr);
+        }
+        
         $recipes = $contr->getXmlRecipes();
         $comments = $contr->getComments($this->recipeNumber);
         

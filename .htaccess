@@ -13,3 +13,10 @@ Options All -Indexes
 
 	RewriteRule (.*) index.php [L,QSA]
 </IfModule>
+
+ExpiresActive On
+ExpiresByType image/gif "access plus 1 weeks"
+ExpiresByType image/jpg "access plus 1 weeks"
+ExpiresByType image/jpeg "access plus 1 weeks"
+ExpiresByType image/png "access plus 1 weeks"
+ExpiresByType text/css "access plus 1 weeks"

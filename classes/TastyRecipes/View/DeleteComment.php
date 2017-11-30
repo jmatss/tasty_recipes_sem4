@@ -4,6 +4,7 @@ namespace TastyRecipes\View;
 
 use Id1354fw\View\AbstractRequestHandler;
 use TastyRecipes\Util\Constants;
+use TastyRecipes\Controller\Controller;
 
 class DeleteComment extends AbstractRequestHandler {
     private $timestamp;
@@ -21,7 +22,14 @@ class DeleteComment extends AbstractRequestHandler {
     }
     
     protected function doExecute(): string {
-        $contr = $this->session->get(Constants::CONTR_NAME);
+        try {
+            $contr = $this->session->get(Constants::CONTR_NAME);
+        } catch(\LogicException $e) {
+            $this->session->restart();
+            $contr = new Controller();
+            $this->session->set(Constants::CONTR_NAME, $contr);
+        }
+        
         $contr->deleteComment($this->timestamp, $this->username);
         
         \Header('Location: Recipe?recipe=' . $this->recipeNumber);
