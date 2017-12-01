@@ -8,14 +8,10 @@ use TastyRecipes\Controller\Controller;
 
 class WriteComment extends AbstractRequestHandler {
     private $recipeNumber;
-    private $username;
     private $comment;
     
     public function setRecipeNumber($recipeNumber) {
         $this->recipeNumber = $recipeNumber;
-    }
-    public function setUsername($username) {
-        $this->username = $username;
     }
     public function setComment($comment) {
         $this->comment = $comment;
@@ -30,7 +26,13 @@ class WriteComment extends AbstractRequestHandler {
             $this->session->set(Constants::CONTR_NAME, $contr);
         }
         
-        if (!($contr->writeComment($this->recipeNumber, $this->username, $this->comment))) {    // something wrong
+        if($contr->checkIfLoggedIn()) {
+            $username = $contr->getLoggedInUsername();
+        } else {
+            \Header('Location: Recipe?recipe=' . $this->recipeNumber . '&error=true');
+        }
+        
+        if (!($contr->writeComment($this->recipeNumber, $username, $this->comment))) {
             \Header('Location: Recipe?recipe=' . $this->recipeNumber . '&error=true');
         } else {
             \Header('Location: Recipe?recipe=' . $this->recipeNumber);

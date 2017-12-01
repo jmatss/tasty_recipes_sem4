@@ -25,6 +25,7 @@ class DeleteComment extends AbstractRequestHandler {
             $contr = new Controller();
             $this->session->set(Constants::CONTR_NAME, $contr);
         }
+        
         if($contr->checkIfLoggedIn())
         {
             $username = $contr->getLoggedInUsername();

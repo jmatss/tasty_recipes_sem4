@@ -34,7 +34,6 @@
 		echo '
 			<form action="WriteComment" method="post">
 				<br/><label for="name">Username:</label> <b>' . $username . '</b><br/>
-				<input type="hidden" name="username" value="' . $username . '">
 				<input type="hidden" name="recipeNumber" value="' . $recipeNumber . '">
 				<label for="comment">Write your comment here:</label><br/>
 				<textarea id="comment" name="comment"></textarea><br/>

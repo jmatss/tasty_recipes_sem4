@@ -34,7 +34,7 @@ class Controller {
         }
         
         public function checkIfLoggedIn() {
-            return !empty($this->user);
+            return !is_null($this->user);
         }
         public function getLoggedInUsername() {
             return $this->user->getUsername();
@@ -51,7 +51,7 @@ class Controller {
             if (empty($username) || empty($comment) || ctype_space($comment)) {
                 return false;
             }
-            return $this->tastyRecipesDAO->writeComment($recipe, $username, \htmlentities($comment));
+            return $this->tastyRecipesDAO->writeComment($recipe, $username, \nl2br(\htmlentities($comment)));
         }
 
         public function deleteComment($timestamp, $username) {

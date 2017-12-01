@@ -13,7 +13,6 @@ class Recipe extends AbstractRequestHandler{
     public function setRecipe($recipe) {
         $this->recipeNumber = $recipe;
     }
-    
     public function setError($error) {
         $this->error = $error;
     }
