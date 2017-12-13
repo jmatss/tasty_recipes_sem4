@@ -5,6 +5,9 @@
         <meta charset="UTF-8" />
 		<link rel="stylesheet" type="text/css" href="../../resources/css/reset.css" />
         <link rel="stylesheet" type="text/css" href="../../resources/css/style.css" />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+        <script src="../../resources/js/javascript.js"></script>
+        
 	</head>
 	<body>
 		<header>

@@ -17,7 +17,7 @@
 			<section class="main_section">
 			<h1>Logged out</h1><br/>
                         <p>You have been logged out!</p>
-			</section>
+			</section> 
 			<br/>
 		</div>
 	</body>

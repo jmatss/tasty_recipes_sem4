@@ -2,7 +2,7 @@
 
 namespace TastyRecipes\Model;
 
-class Comment {
+class Comment implements \JsonSerializable {
     private $recipe;
     private $username;
     private $comment;
@@ -26,6 +26,16 @@ class Comment {
     }
     public function getTimestamp() {
         return $this->timestamp;
+    }
+
+    public function jsonSerialize() {
+        $json_obj = new \stdClass();
+        $json_obj->recipe = $this->recipe;
+        $json_obj->username = $this->username;
+        $json_obj->comment = $this->comment;
+        $json_obj->timestamp = $this->timestamp;
+        
+        return $json_obj;
     }
 }
 

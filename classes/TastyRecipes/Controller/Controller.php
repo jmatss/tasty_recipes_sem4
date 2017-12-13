@@ -51,7 +51,13 @@ class Controller {
             if (empty($username) || empty($comment) || ctype_space($comment)) {
                 return false;
             }
-            return $this->tastyRecipesDAO->writeComment($recipe, $username, \nl2br(\htmlentities($comment)));
+
+            $timestamp = \date('Y-m-d H:i:s');
+            if($this->tastyRecipesDAO->writeComment($recipe, $username, \nl2br(\htmlentities($comment)), $timestamp)) {
+                return $timestamp;
+            } else {
+                return false;
+            }
         }
 
         public function deleteComment($timestamp, $username) {
@@ -62,9 +68,14 @@ class Controller {
             if (!ctype_alnum($username) || !ctype_alnum($password)) {
                 return false;
             }
-            if ($this->tastyRecipesDAO->registerUser($username, $password)) {
-                return $this->loginUser($username, $password);
+            if ($this->tastyRecipesDAO->checkIfUsernameTaken($username)) {
+                return false;
+            } else {
+                if($this->tastyRecipesDAO->registerUser($username, $password)) {
+                    return $this->loginUser($username, $password);
+                } else {
+                    return false;
+                }
             }
-            return false;
         }
 }

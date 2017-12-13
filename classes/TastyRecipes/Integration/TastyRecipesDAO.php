@@ -73,12 +73,12 @@ class TastyRecipesDAO {
         }
     }
     
-    public function writeComment($recipe, $username, $comment) {
+    public function writeComment($recipe, $username, $comment, $timestamp) {
         $this->connect();
         $this->insertCommentStmt = $this->connection->prepare("INSERT INTO " . self::COMMENT . " (" . self::COMMENT_RECIPE_COL_NAME . ", " . self::COMMENT_USERNAME_COL_NAME . ", "
-                . "" . self::COMMENT_COMMENT_COL_NAME . ", " . self::COMMENT_TIMESTAMP_COL_NAME . ") VALUES (?, ?, ?, CURRENT_TIMESTAMP)");
+                . "" . self::COMMENT_COMMENT_COL_NAME . ", " . self::COMMENT_TIMESTAMP_COL_NAME . ") VALUES (?, ?, ?, ?)");
         
-        $this->insertCommentStmt->bind_param('iss', $recipe, $username, $comment);
+        $this->insertCommentStmt->bind_param('isss', $recipe, $username, $comment, $timestamp);
         return $this->insertCommentStmt->execute();
     }
     
@@ -90,21 +90,22 @@ class TastyRecipesDAO {
         return $this->deleteCommentStmt->execute();
     }
     
-    public function registerUser($username, $password) {
+    public function checkIfUsernameTaken($username) {
         $this->connect();
         $this->selectUserStmt = $this->connection->prepare("SELECT " . self::USER_USERNAME_COL_NAME . " FROM " . self::USER . " WHERE " . self::USER_USERNAME_COL_NAME . " = ?");
-        $this->insertUserStmt = $this->connection->prepare("INSERT INTO " . self::USER . " (" . self::USER_USERNAME_COL_NAME . ", " . self::USER_PASSWORD_COL_NAME . ") VALUES (?, ?)");
         
         $this->selectUserStmt->bind_param('s', $username);
         $this->selectUserStmt->execute();
         $this->selectUserStmt->bind_result($username_result);
+        return $this->selectUserStmt->fetch();
+    }
+    
+    public function registerUser($username, $password) {
+        $this->connect();
+        $this->insertUserStmt = $this->connection->prepare("INSERT INTO " . self::USER . " (" . self::USER_USERNAME_COL_NAME . ", " . self::USER_PASSWORD_COL_NAME . ") VALUES (?, ?)");
         
-        if($this->selectUserStmt->fetch()) {    // username already taken
-            return false;
-        } else {
-            $hashedPassword = \password_hash($password, PASSWORD_DEFAULT);
-            $this->insertUserStmt->bind_param('ss', $username, $hashedPassword);
-            return $this->insertUserStmt->execute();
-        }
+        $hashedPassword = \password_hash($password, PASSWORD_DEFAULT);
+        $this->insertUserStmt->bind_param('ss', $username, $hashedPassword);
+        return $this->insertUserStmt->execute();
     }
 }

@@ -6,18 +6,16 @@ use Id1354fw\View\AbstractRequestHandler;
 use TastyRecipes\Util\Constants;
 use TastyRecipes\Controller\Controller;
 
-class WriteComment extends AbstractRequestHandler {
+class ReadComments extends AbstractRequestHandler  {
     private $recipeNumber;
-    private $comment;
+    private $comments;
     
     public function setRecipeNumber($recipeNumber) {
         $this->recipeNumber = $recipeNumber;
     }
-    public function setComment($comment) {
-        $this->comment = $comment;
-    }
 
     protected function doExecute(): string {
+        
         try {
             $contr = $this->session->get(Constants::CONTR_NAME);
         } catch(\LogicException $e) {
@@ -26,12 +24,13 @@ class WriteComment extends AbstractRequestHandler {
             $this->session->set(Constants::CONTR_NAME, $contr);
         }
         
-        if($contr->checkIfLoggedIn()) {
-            $result = $contr->writeComment($this->recipeNumber, $contr->getLoggedInUsername(), $this->comment);
-            $this->addVariable('result', $result);
-        } else {
-            $this->addVariable('result', false);
+        if(\is_null($this->recipeNumber)) {
+            $this->recipeNumber = -1;
         }
+        
+        $this->comments = $contr->getComments($this->recipeNumber);
+        $this->addVariable('result', $this->comments);
+        
         return 'jsonResult';
     }
 }
